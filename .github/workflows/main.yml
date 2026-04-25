@@ -17,16 +17,21 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.buildozer
-          key: buildozer-v2-${{ hashFiles('buildozer.spec') }}
-          restore-keys: buildozer-v2-
+          key: buildozer-v3-${{ hashFiles('buildozer.spec') }}
+          restore-keys: buildozer-v3-
 
       - name: Build APK with Docker
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/home/user/hostcwd \
             -v ~/.buildozer:/home/user/.buildozer \
-            kivy/buildozer \
-            android debug
+            --entrypoint /bin/bash \
+            kivy/buildozer -c "
+              yes | /home/user/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true &&
+              yes | sdkmanager --licenses 2>/dev/null || true &&
+              cd /home/user/hostcwd &&
+              buildozer android debug
+            "
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
