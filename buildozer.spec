@@ -21,7 +21,7 @@ fullscreen      = 0
 android.minapi          = 26
 android.api             = 33
 android.ndk             = 25b
-android.sdk             = 34
+android.sdk             = 33
 android.archs           = arm64-v8a, armeabi-v7a
 
 # ── Permissions ─────────────────────────────────────────────────────────────
