@@ -11,7 +11,7 @@ source.dir       = .
 source.include_exts = py,png,jpg,kv,atlas,json
 
 # ── Python requirements ─────────────────────────────────────────────────────
-requirements = python3,kivy==2.3.0,android,pyjnius
+requirements = python3,kivy==2.3.0,android,pyjnius==1.5.0
 
 # ── Orientation & UI ────────────────────────────────────────────────────────
 orientation     = portrait
