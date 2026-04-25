@@ -16,31 +16,23 @@ jobs:
       - name: Cache buildozer
         uses: actions/cache@v4
         with:
-          path: ~/.buildozer
-          key: buildozer-v4-${{ hashFiles('buildozer.spec') }}
-          restore-keys: buildozer-v4-
+          path: |
+            ~/.buildozer
+            ~/.gradle
+          key: buildozer-${{ hashFiles('buildozer.spec') }}-v5
 
-      - name: Build APK with Docker
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/home/user/hostcwd \
-            -v ~/.buildozer:/home/user/.buildozer \
-            --entrypoint /bin/bash \
-            -e BUILDOZER_WARN_ON_ROOT=1 \
-            kivy/buildozer -c "
-              cd /home/user/hostcwd &&
-              yes | sdkmanager --licenses 2>/dev/null || true &&
-              echo 'y' | buildozer -v android debug
-            "
+      - name: Build with ArtemSBulgakov action
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: android debug
+          buildozer_version: stable
 
-      - name: Find APK
-        run: find . -name "*.apk" | head -5
-
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: AdSyncHelper
-          path: bin/*.apk
+          path: ${{ steps.buildozer.outputs.filename }}
           retention-days: 30
 
       - name: Release
@@ -48,6 +40,6 @@ jobs:
         with:
           tag_name: build-${{ github.run_number }}
           name: "AdSync Helper #${{ github.run_number }}"
-          files: bin/*.apk
+          files: ${{ steps.buildozer.outputs.filename }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
