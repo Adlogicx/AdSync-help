@@ -19,7 +19,7 @@ fullscreen      = 0
 
 # ── Android target ──────────────────────────────────────────────────────────
 android.minapi          = 26
-android.api             = 34
+android.api             = 33
 android.ndk             = 25b
 android.sdk             = 34
 android.archs           = arm64-v8a, armeabi-v7a
